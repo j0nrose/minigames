@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three Minigames</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.2rem;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .game-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .game-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #4a5568;
+            text-align: center;
+        }
+
+        .game-content {
+            text-align: center;
+        }
+
+        /* Color Match Game */
+        .color-display {
+            width: 150px;
+            height: 150px;
+            margin: 20px auto;
+            border-radius: 50%;
+            border: 4px solid #333;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .color-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .color-btn {
+            width: 80px;
+            height: 80px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .color-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Number Guess Game */
+        .guess-input {
+            width: 100px;
+            padding: 15px;
+            font-size: 1.2rem;
+            text-align: center;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin: 10px;
+        }
+
+        .guess-range {
+            color: #666;
+            margin: 10px 0;
+        }
+
+        /* Reaction Game */
+        .reaction-area {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid #333;
+        }
+
+        .reaction-waiting {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .reaction-ready {
+            background: #51cf66;
+            color: white;
+        }
+
+        .reaction-clicked {
+            background: #339af0;
+            color: white;
+        }
+
+        /* Common button styles */
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px 5px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .score {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #4a5568;
+            margin: 15px 0;
+        }
+
+        .message {
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .info {
+            background: #cce7ff;
+            color: #004085;
+            border: 1px solid #b3d9ff;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .games-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .game-card {
+                padding: 20px;
+            }
+
+            .color-display {
+                width: 120px;
+                height: 120px;
+            }
+
+            .color-btn {
+                width: 60px;
+                height: 60px;
+            }
+
+            .reaction-area {
+                width: 150px;
+                height: 150px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .game-title {
+                font-size: 1.4rem;
+            }
+
+            .color-display {
+                width: 100px;
+                height: 100px;
+            }
+
+            .color-btn {
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Three Minigames</h1>
+            <p class="subtitle">Test your skills with these fun challenges</p>
+        </header>
+
+        <div class="games-grid">
+            <!-- Color Match Game -->
+            <div class="game-card">
+                <h2 class="game-title">Color Match</h2>
+                <div class="game-content">
+                    <div class="color-display" id="colorDisplay"></div>
+                    <div class="color-options" id="colorOptions"></div>
+                    <div class="score">Score: <span id="colorScore">0</span></div>
+                    <div id="colorMessage" class="message" style="display: none;"></div>
+                    <button class="btn" onclick="startColorGame()">New Game</button>
+                </div>
+            </div>
+
+            <!-- Number Guess Game -->
+            <div class="game-card">
+                <h2 class="game-title">Number Guess</h2>
+                <div class="game-content">
+                    <div class="guess-range">Guess a number between 1 and 100</div>
+                    <input type="number" id="guessInput" class="guess-input" min="1" max="100" placeholder="?">
+                    <br>
+                    <button class="btn" onclick="makeGuess()">Guess</button>
+                    <button class="btn" onclick="startNumberGame()">New Game</button>
+                    <div class="score">Attempts: <span id="attempts">0</span></div>
+                    <div id="guessMessage" class="message" style="display: none;"></div>
+                </div>
+            </div>
+
+            <!-- Reaction Time Game -->
+            <div class="game-card">
+                <h2 class="game-title">Reaction Time</h2>
+                <div class="game-content">
+                    <div class="reaction-area reaction-waiting" id="reactionArea" onclick="handleReactionClick()">
+                        Click to Start
+                    </div>
+                    <div class="score">Best: <span id="bestTime">-</span>ms</div>
+                    <div class="score">Last: <span id="lastTime">-</span>ms</div>
+                    <div id="reactionMessage" class="message" style="display: none;"></div>
+                    <button class="btn" onclick="resetReactionGame()">Reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Color Match Game
+        let colorScore = 0;
+        let currentColor = '';
+        const colors = ['#ff6b6b', '#51cf66', '#339af0', '#ffd43b', '#9775fa', '#ff8787'];
+
+        function startColorGame() {
+            colorScore = 0;
+            document.getElementById('colorScore').textContent = colorScore;
+            showMessage('colorMessage', '', '');
+            generateColorChallenge();
+        }
+
+        function generateColorChallenge() {
+            currentColor = colors[Math.floor(Math.random() * colors.length)];
+            document.getElementById('colorDisplay').style.backgroundColor = currentColor;
+            
+            const shuffledColors = [...colors].sort(() => Math.random() - 0.5);
+            const optionsContainer = document.getElementById('colorOptions');
+            optionsContainer.innerHTML = '';
+            
+            for (let i = 0; i < 4; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'color-btn';
+                btn.style.backgroundColor = shuffledColors[i];
+                btn.onclick = () => checkColorMatch(shuffledColors[i]);
+                optionsContainer.appendChild(btn);
+            }
+            
+            if (!shuffledColors.includes(currentColor)) {
+                const randomIndex = Math.floor(Math.random() * 4);
+                optionsContainer.children[randomIndex].style.backgroundColor = currentColor;
+                optionsContainer.children[randomIndex].onclick = () => checkColorMatch(currentColor);
+            }
+        }
+
+        function checkColorMatch(selectedColor) {
+            if (selectedColor === currentColor) {
+                colorScore++;
+                document.getElementById('colorScore').textContent = colorScore;
+                showMessage('colorMessage', 'Correct! Well done!', 'success');
+                setTimeout(generateColorChallenge, 1000);
+            } else {
+                showMessage('colorMessage', 'Wrong color! Try again.', 'error');
+                setTimeout(() => showMessage('colorMessage', '', ''), 2000);
+            }
+        }
+
+        // Number Guess Game
+        let targetNumber = 0;
+        let attempts = 0;
+
+        function startNumberGame() {
+            targetNumber = Math.floor(Math.random() * 100) + 1;
+            attempts = 0;
+            document.getElementById('attempts').textContent = attempts;
+            document.getElementById('guessInput').value = '';
+            showMessage('guessMessage', '', '');
+        }
+
+        function makeGuess() {
+            const guess = parseInt(document.getElementById('guessInput').value);
+            if (isNaN(guess) || guess < 1 || guess > 100) {
+                showMessage('guessMessage', 'Please enter a valid number between 1 and 100', 'error');
+                return;
+            }
+            
+            attempts++;
+            document.getElementById('attempts').textContent = attempts;
+            
+            if (guess === targetNumber) {
+                showMessage('guessMessage', `Correct! You found it in ${attempts} attempts!`, 'success');
+            } else if (guess < targetNumber) {
+                showMessage('guessMessage', 'Too low! Try higher.', 'info');
+            } else {
+                showMessage('guessMessage', 'Too high! Try lower.', 'info');
+            }
+            
+            document.getElementById('guessInput').value = '';
+        }
+
+        // Reaction Time Game
+        let reactionStartTime = 0;
+        let reactionTimeout = null;
+        let reactionState = 'waiting';
+        let bestTime = null;
+        let lastTime = null;
+
+        function handleReactionClick() {
+            const area = document.getElementById('reactionArea');
+            
+            if (reactionState === 'waiting') {
+                reactionState = 'preparing';
+                area.textContent = 'Wait for green...';
+                area.className = 'reaction-area reaction-waiting';
+                
+                const delay = Math.random() * 4000 + 1000; // 1-5 seconds
+                reactionTimeout = setTimeout(() => {
+                    reactionState = 'ready';
+                    area.textContent = 'Click now!';
+                    area.className = 'reaction-area reaction-ready';
+                    reactionStartTime = Date.now();
+                }, delay);
+                
+            } else if (reactionState === 'preparing') {
+                clearTimeout(reactionTimeout);
+                reactionState = 'waiting';
+                area.textContent = 'Too early! Click to try again';
+                area.className = 'reaction-area reaction-waiting';
+                showMessage('reactionMessage', 'You clicked too early! Wait for green.', 'error');
+                setTimeout(() => showMessage('reactionMessage', '', ''), 2000);
+                
+            } else if (reactionState === 'ready') {
+                const reactionTime = Date.now() - reactionStartTime;
+                lastTime = reactionTime;
+                
+                if (bestTime === null || reactionTime < bestTime) {
+                    bestTime = reactionTime;
+                    document.getElementById('bestTime').textContent = bestTime;
+                }
+                
+                document.getElementById('lastTime').textContent = lastTime;
+                
+                reactionState = 'finished';
+                area.textContent = `${reactionTime}ms - Click to try again`;
+                area.className = 'reaction-area reaction-clicked';
+                
+                let message = '';
+                if (reactionTime < 200) message = 'Lightning fast!';
+                else if (reactionTime < 300) message = 'Excellent reflexes!';
+                else if (reactionTime < 400) message = 'Good reaction time!';
+                else message = 'Not bad, try to be faster!';
+                
+                showMessage('reactionMessage', message, 'success');
+                setTimeout(() => showMessage('reactionMessage', '', ''), 2000);
+                
+            } else if (reactionState === 'finished') {
+                reactionState = 'waiting';
+                area.textContent = 'Click to start';
+                area.className = 'reaction-area reaction-waiting';
+            }
+        }
+
+        function resetReactionGame() {
+            bestTime = null;
+            lastTime = null;
+            document.getElementById('bestTime').textContent = '-';
+            document.getElementById('lastTime').textContent = '-';
+            reactionState = 'waiting';
+            const area = document.getElementById('reactionArea');
+            area.textContent = 'Click to start';
+            area.className = 'reaction-area reaction-waiting';
+            showMessage('reactionMessage', '', '');
+            if (reactionTimeout) clearTimeout(reactionTimeout);
+        }
+
+        // Utility function
+        function showMessage(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = message ? `message ${type}` : 'message';
+            element.style.display = message ? 'block' : 'none';
+        }
+
+        // Allow Enter key for number guessing
+        document.getElementById('guessInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                makeGuess();
+            }
+        });
+
+        // Initialize games
+        startColorGame();
+        startNumberGame();
+    </script>
+</body>
+</html>
